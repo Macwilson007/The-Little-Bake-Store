@@ -1,0 +1,387 @@
+/* BakeBot Chat Widget */
+.bakebot {
+    position: fixed;
+    bottom: var(--space-6);
+    right: var(--space-6);
+    z-index: var(--z-chat);
+}
+
+/* FAB Button */
+.bakebot-fab {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-xl);
+    transition: all var(--transition-base);
+    position: relative;
+}
+
+.bakebot-fab:hover {
+    transform: scale(1.08);
+    box-shadow: var(--shadow-2xl);
+}
+
+.bakebot-fab.hidden {
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.bakebot-fab-icon {
+    font-size: 1.8rem;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.bakebot-fab-pulse {
+    position: absolute;
+    inset: -4px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+    opacity: 0.4;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Chat Window */
+.bakebot-window {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 380px;
+    max-width: calc(100vw - 32px);
+    height: 520px;
+    max-height: calc(100vh - 120px);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-2xl), 0 0 40px rgba(74, 44, 42, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.8) translateY(40px);
+    opacity: 0;
+    visibility: hidden;
+    transform-origin: bottom right;
+    transition: all var(--transition-spring);
+}
+
+.bakebot-window.open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Header */
+.bakebot-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-5);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: #fff;
+}
+
+.bakebot-header-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.bakebot-avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    border: 2px solid #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.bakebot-header h4 {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: #fff;
+}
+
+.bakebot-status {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-xs);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4ADE80;
+    display: inline-block;
+}
+
+.bakebot-close {
+    color: rgba(255, 255, 255, 0.7);
+    transition: color var(--transition-fast);
+}
+
+.bakebot-close:hover {
+    color: #fff;
+}
+
+/* Messages */
+.bakebot-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    background: var(--color-surface);
+}
+
+.bakebot-message {
+    display: flex;
+    gap: var(--space-2);
+    max-width: 85%;
+    animation: fadeInUp 0.3s ease;
+}
+
+.bakebot-message.bot {
+    align-self: flex-start;
+}
+
+.bakebot-message.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.bot .bakebot-msg-avatar {
+    width: 28px;
+    height: 28px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    margin-top: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.bakebot-msg-bubble {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+.bakebot-message.bot .bakebot-msg-bubble {
+    background: #fff;
+    color: var(--color-text);
+    border: 1px solid var(--color-border-light);
+    border-bottom-left-radius: var(--radius-sm);
+}
+
+.bakebot-message.user .bakebot-msg-bubble {
+    background: var(--color-primary);
+    color: #fff;
+    border-bottom-right-radius: var(--radius-sm);
+}
+
+/* Typing Indicator */
+.bakebot-typing {
+    display: flex;
+    gap: 4px;
+    padding: var(--space-3) var(--space-5) !important;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-text-muted);
+    animation: bounce 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* Quick Replies */
+.bakebot-quick-replies {
+    display: flex;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    overflow-x: auto;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border-light);
+}
+
+.quick-reply-btn {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    white-space: nowrap;
+    color: var(--color-text-secondary);
+    transition: all var(--transition-fast);
+    background: #fff;
+}
+
+.quick-reply-btn:hover {
+    border-color: var(--color-highlight);
+    color: var(--color-highlight);
+    background: rgba(214, 163, 109, 0.05);
+}
+
+/* Input */
+.bakebot-input-container {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--color-border-light);
+    background: #fff;
+    padding: 0 var(--space-2);
+}
+
+.bakebot-input {
+    display: flex;
+    align-items: center;
+    padding: var(--space-3) var(--space-2);
+    background: #fff;
+}
+
+.bakebot-input-field {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    background: transparent;
+}
+
+.bakebot-input-field::placeholder {
+    color: var(--color-text-muted);
+}
+
+.bakebot-send {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+    color: #fff;
+    transition: all var(--transition-fast);
+}
+
+.bakebot-send:hover:not(:disabled) {
+    background: var(--color-highlight);
+}
+
+.bakebot-send:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .bakebot {
+        bottom: var(--space-4);
+        right: var(--space-4);
+    }
+
+    .bakebot-window {
+        width: calc(100vw - 32px);
+        height: calc(100vh - 100px);
+        border-radius: var(--radius-lg);
+    }
+
+    .bakebot-fab {
+        width: 52px;
+        height: 52px;
+    }
+}
+
+.bakebot-mic {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+    margin-left: var(--space-2);
+}
+
+.bakebot-mic:hover {
+    color: var(--color-primary);
+    background: var(--color-accent);
+}
+
+.bakebot-mic.listening {
+    color: #fff;
+    background: var(--color-error);
+    animation: pulse 1.5s infinite;
+}
+
+.mic-wave {
+    display: flex;
+    gap: 2px;
+    height: 12px;
+    align-items: center;
+}
+
+.mic-wave span {
+    display: block;
+    width: 3px;
+    height: 100%;
+    background: #fff;
+    animation: equalize 1s infinite alternate;
+}
+
+.mic-wave span:nth-child(2) {
+    animation-delay: -0.5s;
+}
+
+.mic-wave span:nth-child(3) {
+    animation-delay: -0.2s;
+}
+
+@keyframes equalize {
+    0% {
+        height: 30%;
+    }
+
+    100% {
+        height: 100%;
+    }
+}

@@ -1,0 +1,5 @@
+Connecting with DIRECT_DATABASE_URL: postgres://postgres:postgres@127.0.0.1:51214/template1?sslmode=disable
+Connection successful!
+User count: 1
+Product count: 4
+Category count: 5

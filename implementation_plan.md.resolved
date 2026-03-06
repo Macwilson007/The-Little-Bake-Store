@@ -1,0 +1,48 @@
+# The Little Bake Store - Implementation Plan
+
+## Overview
+AI-powered ecommerce web application for a Nigerian bakery brand built with Next.js 14, PostgreSQL, Paystack, and AI integrations.
+
+## Tech Stack
+- **Framework**: Next.js 14 (App Router, SSR)
+- **Language**: TypeScript
+- **Styling**: Vanilla CSS with CSS Variables (design tokens)
+- **Database**: PostgreSQL with Prisma ORM
+- **Payments**: Paystack
+- **Image Storage**: Amazon S3 (simulated with local storage initially)
+- **AI**: Grok API / GPT-4 fallback
+- **Deployment**: Vercel-optimized
+
+## Phase 1: Foundation (Current Session)
+1. Initialize Next.js project
+2. Design system (CSS variables, fonts, global styles)
+3. Navigation with mega menu dropdown
+4. Homepage layout (hero, categories, trending, testimonials, footer)
+5. Shop page with sidebar filters + product grid
+6. Product detail page
+7. Shopping cart (slide-out panel)
+8. Checkout flow
+9. BakeBot AI chat widget
+10. Admin dashboard (basic)
+
+## Phase 2: Backend & Database
+- PostgreSQL schema with Prisma
+- API routes for products, orders, users
+- Authentication (admin login)
+- Paystack integration
+
+## Phase 3: AI Features
+- BakeBot receptionist
+- Product recommendation engine
+- SEO automation
+- Abandoned cart recovery
+- Sales forecasting
+
+## Design Tokens
+- Primary: #4A2C2A (Chocolate Brown)
+- Accent: #F7F3EF (Cream)
+- Highlight: #D6A36D (Caramel)
+- Background: #FFFFFF
+- Text: #1A1A1A
+- Heading Font: Playfair Display
+- Body Font: Inter

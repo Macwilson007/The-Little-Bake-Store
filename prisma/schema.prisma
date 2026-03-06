@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
+  reviews   Review[]
+}
+
+enum Role {
+  USER
+  CUSTOMER
+  ADMIN
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  products    Product[]
+}
+
+model Product {
+  id                 String   @id @default(cuid())
+  name               String
+  slug               String   @unique
+  description        String
+  shortDescription   String?
+  price              Float
+  originalPrice      Float?
+  ingredients        String[]
+  servingSuggestions String?
+  image              String?
+  images             String[]
+  badge              String?
+  inStock            Boolean  @default(true)
+  flavor             String?
+  occasions          String[]
+  dietTypes          String[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  
+  categoryId         String
+  category           Category @relation(fields: [categoryId], references: [id])
+  reviews            Review[]
+  orderItems         OrderItem[]
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  content   String
+  author    String
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  orderNumber   String      @unique
+  status        OrderStatus @default(PENDING)
+  totalAmount   Float
+  deliveryFee   Float
+  paymentMethod String
+  paymentStatus PayStatus   @default(UNPAID)
+  
+  // Delivery Info
+  firstName     String
+  lastName      String
+  email         String
+  phone         String
+  address       String
+  city          String
+  state         String
+  deliveryOption String
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  userId        String?
+  user          User?       @relation(fields: [userId], references: [id])
+  orderItems    OrderItem[]
+  paystackRef   String?     @unique
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  quantity  Int
+  priceAtPurchase Float
+  
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  PREPARING
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum PayStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
+
+model SiteSettings {
+  id              String   @id @default("standard")
+  heroImage       String   @default("/images/hero-bg.png")
+  heroTitle       String   @default("Artisan Bakes, Made with Love")
+  heroSubtitle    String   @default("Handcrafted cakes, cupcakes & pastries made from premium ingredients.")
+  contactEmail    String   @default("orders@littlebakestore.com")
+  contactPhone    String   @default("+234 800 000 0000")
+  contactAddress  String   @default("Abuja, Nigeria")
+  facebookUrl     String?
+  instagramUrl    String?
+  twitterUrl      String?
+  whatsappNumber  String?
+  updatedAt       DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  author    String
+  role      String
+  content   String
+  rating    Int      @default(5)
+  avatar    String   @default("👩")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
