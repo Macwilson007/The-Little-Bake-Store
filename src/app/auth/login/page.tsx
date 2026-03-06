@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import './login.css';
 
-export default function LoginPage() {
+function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get('callbackUrl') || '/admin';
+    const callbackUrl = searchParams?.get('callbackUrl') || '/admin';
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -41,43 +41,51 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="login-page">
-            <div className="login-card">
-                <div className="login-header">
-                    <h1>Little Bake Store</h1>
-                    <p>Admin Portal Access</p>
+        <div className="login-card">
+            <div className="login-header">
+                <h1>Little Bake Store</h1>
+                <p>Admin Portal Access</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="login-form">
+                {error && <div className="login-error">{error}</div>}
+
+                <div className="form-group">
+                    <label>Email Address</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="admin@littlebakestore.com"
+                        required
+                    />
                 </div>
 
-                <form onSubmit={handleSubmit} className="login-form">
-                    {error && <div className="login-error">{error}</div>}
+                <div className="form-group">
+                    <label>Password</label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        required
+                    />
+                </div>
 
-                    <div className="form-group">
-                        <label>Email Address</label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="admin@littlebakestore.com"
-                            required
-                        />
-                    </div>
+                <button type="submit" className="login-btn" disabled={loading}>
+                    {loading ? 'Authenticating...' : 'Login to Dashboard'}
+                </button>
+            </form>
+        </div>
+    );
+}
 
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="••••••••"
-                            required
-                        />
-                    </div>
-
-                    <button type="submit" className="login-btn" disabled={loading}>
-                        {loading ? 'Authenticating...' : 'Login to Dashboard'}
-                    </button>
-                </form>
-            </div>
+export default function LoginPage() {
+    return (
+        <div className="login-page">
+            <Suspense fallback={<div>Loading login...</div>}>
+                <LoginForm />
+            </Suspense>
         </div>
     );
 }
