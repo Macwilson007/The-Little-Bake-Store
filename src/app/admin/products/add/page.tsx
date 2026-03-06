@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ImageUpload from '@/components/ImageUpload';
-import '@/app/admin/products/products.css';
+import '../products.css';
 
 export default function AddProductPage() {
     const router = useRouter();
