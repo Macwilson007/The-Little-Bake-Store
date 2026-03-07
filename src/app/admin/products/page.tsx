@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { formatPrice } from '@/data/products';
+import { formatPrice, Product } from '@/data/products';
 import './products.css';
 
 export default function AdminProductsPage() {
-    const [products, setProducts] = useState<any[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -17,8 +17,14 @@ export default function AdminProductsPage() {
     const fetchProducts = async () => {
         try {
             const res = await fetch('/api/products');
+            if (!res.ok) throw new Error('Failed to fetch products');
+
             const data = await res.json();
-            setProducts(data);
+            if (Array.isArray(data)) {
+                setProducts(data);
+            } else {
+                console.error('API did not return an array:', data);
+            }
         } catch (error) {
             console.error('Failed to fetch products:', error);
         } finally {
@@ -81,7 +87,7 @@ export default function AdminProductsPage() {
                                         <strong>{product.name}</strong>
                                         <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>{product.slug}</div>
                                     </td>
-                                    <td>{product.category?.name || 'Uncategorized'}</td>
+                                    <td>{product.category?.name || product.category || 'Uncategorized'}</td>
                                     <td>{formatPrice(product.price)}</td>
                                     <td>
                                         <span className={`status-badge ${product.inStock ? 'delivered' : 'preparing'}`}>

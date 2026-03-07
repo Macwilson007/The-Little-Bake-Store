@@ -30,13 +30,13 @@ export const OrderStatusEmail = ({
                 <Heading style={h1}>The Little Bake Store</Heading>
                 <Text style={text}>Hi {customerName},</Text>
                 <Text style={text}>
-                    We're writing to let you know that the status of your order <strong>#{orderNumber}</strong> has been updated to:
+                    We&apos;re writing to let you know that the status of your order <strong>#{orderNumber}</strong> has been updated to:
                 </Text>
                 <Section style={statusBox}>
                     <Text style={statusText}>{status.replace(/_/g, ' ')}</Text>
                 </Section>
                 <Text style={text}>
-                    Thank you for choosing The Little Bake Store! We're hard at work making sure your treats are perfect.
+                    Thank you for choosing The Little Bake Store! We&apos;re hard at work making sure your treats are perfect.
                 </Text>
                 <Link href={`${process.env.APP_URL}/shop`} style={button}>
                     Visit our Store

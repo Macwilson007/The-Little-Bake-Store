@@ -38,11 +38,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                         <Image src={product.image} alt={product.name} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 50vw, 25vw" />
                     ) : (
                         <div className="product-card-image-placeholder">
-                            {product.category === 'cakes' && '🎂'}
-                            {product.category === 'cupcakes' && '🧁'}
-                            {product.category === 'desserts' && '🍮'}
-                            {product.category === 'pastries' && '🥐'}
-                            {product.category === 'event-packages' && '🎁'}
+                            {(product.category?.slug === 'cakes' || product.category === 'cakes') && '🎂'}
+                            {(product.category?.slug === 'cupcakes' || product.category === 'cupcakes') && '🧁'}
+                            {(product.category?.slug === 'desserts' || product.category === 'desserts') && '🍮'}
+                            {(product.category?.slug === 'pastries' || product.category === 'pastries') && '🥐'}
+                            {(product.category?.slug === 'event-packages' || product.category === 'event-packages') && '🎁'}
                         </div>
                     )}
 

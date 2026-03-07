@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import './BakeBot.css';
 
@@ -40,24 +40,24 @@ const BOT_RESPONSES: Record<string, string> = {
 function getBotResponse(message: string): string {
     const lower = message.toLowerCase();
     if (lower.includes('recommend') || lower.includes('cake') || lower.includes('suggest') || lower.includes('best')) {
-        return BOT_RESPONSES['recommend'];
+        return BOT_RESPONSES['recommend'] || BOT_RESPONSES['default'];
     }
     if (lower.includes('delivery') || lower.includes('deliver') || lower.includes('shipping')) {
-        return BOT_RESPONSES['delivery'];
+        return BOT_RESPONSES['delivery'] || BOT_RESPONSES['default'];
     }
     if (lower.includes('track') || lower.includes('order') || lower.includes('status')) {
-        return BOT_RESPONSES['track'];
+        return BOT_RESPONSES['track'] || BOT_RESPONSES['default'];
     }
     if (lower.includes('event') || lower.includes('party') || lower.includes('corporate') || lower.includes('package')) {
-        return BOT_RESPONSES['event'];
+        return BOT_RESPONSES['event'] || BOT_RESPONSES['default'];
     }
     if (lower.includes('price') || lower.includes('cost') || lower.includes('how much')) {
-        return BOT_RESPONSES['price'];
+        return BOT_RESPONSES['price'] || BOT_RESPONSES['default'];
     }
     if (lower.includes('vegan') || lower.includes('gluten') || lower.includes('sugar free') || lower.includes('diet')) {
-        return BOT_RESPONSES['vegan'];
+        return BOT_RESPONSES['vegan'] || BOT_RESPONSES['default'];
     }
-    return BOT_RESPONSES['default'];
+    return BOT_RESPONSES['default'] || '';
 }
 
 export default function BakeBot() {
@@ -69,6 +69,47 @@ export default function BakeBot() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const recognitionRef = useRef<any>(null);
+
+    const sendMessage = useCallback((text: string) => {
+        if (!text.trim()) return;
+
+        const userMessage: Message = {
+            id: Date.now().toString(),
+            role: 'user',
+            content: text.trim(),
+            timestamp: new Date(),
+        };
+
+        setMessages((prev) => [...prev, userMessage]);
+        setInput('');
+        setIsTyping(true);
+
+        // Simulate AI response
+        setTimeout(() => {
+            const botResponse: Message = {
+                id: (Date.now() + 1).toString(),
+                role: 'bot',
+                content: getBotResponse(text),
+                timestamp: new Date(),
+            };
+            setMessages((prev) => [...prev, botResponse]);
+            setIsTyping(false);
+        }, 1000 + Math.random() * 1000);
+    }, []);
+
+    const scrollToBottom = useCallback(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, []);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages, scrollToBottom]);
+
+    useEffect(() => {
+        if (isOpen && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [isOpen]);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -99,7 +140,7 @@ export default function BakeBot() {
                 };
             }
         }
-    }, []);
+    }, [sendMessage]);
 
     const toggleListening = () => {
         if (!recognitionRef.current) {
@@ -112,7 +153,6 @@ export default function BakeBot() {
             try {
                 recognitionRef.current.start();
                 setIsListening(true);
-                // Visual feedback that we're listening
                 if (inputRef.current) {
                     inputRef.current.placeholder = "Listening... Speak now";
                 }
@@ -121,47 +161,6 @@ export default function BakeBot() {
                 setIsListening(false);
             }
         }
-    };
-
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
-
-    useEffect(() => {
-        if (isOpen && inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, [isOpen]);
-
-    const sendMessage = (text: string) => {
-        if (!text.trim()) return;
-
-        const userMessage: Message = {
-            id: Date.now().toString(),
-            role: 'user',
-            content: text.trim(),
-            timestamp: new Date(),
-        };
-
-        setMessages((prev) => [...prev, userMessage]);
-        setInput('');
-        setIsTyping(true);
-
-        // Simulate AI response
-        setTimeout(() => {
-            const botResponse: Message = {
-                id: (Date.now() + 1).toString(),
-                role: 'bot',
-                content: getBotResponse(text),
-                timestamp: new Date(),
-            };
-            setMessages((prev) => [...prev, botResponse]);
-            setIsTyping(false);
-        }, 1000 + Math.random() * 1000);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -179,8 +178,8 @@ export default function BakeBot() {
             <div className={`bakebot-window ${isOpen ? 'open' : ''}`}>
                 <div className="bakebot-header">
                     <div className="bakebot-header-info">
-                        <div className="bakebot-avatar">
-                            <Image src="/images/receptionist.png" alt="Avatar" layout="fill" objectFit="cover" />
+                        <div className="bakebot-avatar" style={{ position: 'relative' }}>
+                            <Image src="/images/receptionist.png" alt="Avatar" fill style={{ objectFit: 'cover' }} />
                         </div>
                         <div>
                             <h4>BakeBot</h4>
@@ -202,8 +201,8 @@ export default function BakeBot() {
                     {messages.map((msg) => (
                         <div key={msg.id} className={`bakebot-message ${msg.role}`}>
                             {msg.role === 'bot' && (
-                                <div className="bakebot-msg-avatar">
-                                    <Image src="/images/receptionist.png" alt="Avatar" layout="fill" objectFit="cover" />
+                                <div className="bakebot-msg-avatar" style={{ position: 'relative' }}>
+                                    <Image src="/images/receptionist.png" alt="Avatar" fill style={{ objectFit: 'cover' }} />
                                 </div>
                             )}
                             <div className="bakebot-msg-bubble">
@@ -219,8 +218,8 @@ export default function BakeBot() {
 
                     {isTyping && (
                         <div className="bakebot-message bot">
-                            <div className="bakebot-msg-avatar">
-                                <Image src="/images/receptionist.png" alt="Avatar" layout="fill" objectFit="cover" />
+                            <div className="bakebot-msg-avatar" style={{ position: 'relative' }}>
+                                <Image src="/images/receptionist.png" alt="Avatar" fill style={{ objectFit: 'cover' }} />
                             </div>
                             <div className="bakebot-msg-bubble bakebot-typing">
                                 <span className="typing-dot"></span>
@@ -295,8 +294,8 @@ export default function BakeBot() {
                 aria-label="Open chat"
                 id="bakebot-fab"
             >
-                <div className="bakebot-fab-icon">
-                    <Image src="/images/receptionist.png" alt="Avatar" layout="fill" objectFit="cover" />
+                <div className="bakebot-fab-icon" style={{ position: 'relative' }}>
+                    <Image src="/images/receptionist.png" alt="Avatar" fill style={{ objectFit: 'cover' }} />
                 </div>
                 <span className="bakebot-fab-pulse"></span>
             </button>

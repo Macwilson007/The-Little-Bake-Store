@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { CartItem } from '@/data/products';
 
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
 
@@ -14,7 +15,7 @@ function generateOrderNumber() {
 
 export async function POST(request: Request) {
     try {
-        const { items, customer, delivery, subtotal, deliveryFee, total } = await request.json();
+        const { items, customer, deliveryFee, total } = await request.json();
 
         // 1. Create the order in the database
         const order = await prisma.order.create({
@@ -36,7 +37,7 @@ export async function POST(request: Request) {
                 deliveryOption: customer.deliveryOption || 'standard',
 
                 orderItems: {
-                    create: items.map((item: any) => ({
+                    create: items.map((item: CartItem) => ({
                         productId: item.product.id,
                         quantity: item.quantity,
                         priceAtPurchase: item.product.price,

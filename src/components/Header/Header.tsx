@@ -32,11 +32,16 @@ export default function Header() {
         };
     }, []);
 
+    const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+
     // Close mobile menu on route change
     useEffect(() => {
-        setMenuOpen(false);
-        setMegaMenuOpen(false);
-    }, []);
+        const timer = setTimeout(() => {
+            setMenuOpen(false);
+            setMegaMenuOpen(false);
+        }, 0);
+        return () => clearTimeout(timer);
+    }, [pathname]);
 
     return (
         <>

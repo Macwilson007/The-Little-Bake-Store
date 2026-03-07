@@ -49,7 +49,7 @@ export default function AdminDashboard() {
                         <div className="ai-prediction">
                             <h4>Next Week Revenue Prediction</h4>
                             <div className="prediction-value">₦3,200,000</div>
-                            <p>Expected 15% increase due to upcoming Valentine's weekend.</p>
+                            <p>Expected 15% increase due to upcoming Valentine&apos;s weekend.</p>
                         </div>
 
                         <div className="ai-list">

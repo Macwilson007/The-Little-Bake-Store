@@ -7,20 +7,20 @@ export interface Product {
   description: string;
   shortDescription: string;
   ingredients: string[];
-  servingSuggestions: string;
-  category: string;
+  servingSuggestions?: string | null;
+  category: any;
   subcategory: string;
-  image: string;
+  image?: string | null;
   images: string[];
-  badge?: 'new' | 'sale' | 'bestseller' | 'popular';
+  badge?: 'new' | 'sale' | 'bestseller' | 'popular' | string | null;
   rating: number;
   reviewCount: number;
   inStock: boolean;
-  flavor: string;
-  occasion: string[];
-  dietType: string[];
-  metaTitle: string;
-  metaDescription: string;
+  flavor?: string | null;
+  occasions: string[];
+  dietTypes: string[];
+  metaTitle?: string;
+  metaDescription?: string;
 }
 
 export interface Category {
@@ -138,8 +138,8 @@ export const products: Product[] = [
     reviewCount: 152,
     inStock: true,
     flavor: 'chocolate',
-    occasion: ['birthday', 'anniversary'],
-    dietType: [],
+    occasions: ['birthday', 'anniversary'],
+    dietTypes: [],
     metaTitle: 'Classic Chocolate Birthday Cake | The Little Bake Store',
     metaDescription: 'Order our bestselling chocolate birthday cake made with premium Belgian chocolate.',
   },
@@ -162,8 +162,8 @@ export const products: Product[] = [
     reviewCount: 89,
     inStock: true,
     flavor: 'red velvet',
-    occasion: ['wedding', 'valentine', 'anniversary'],
-    dietType: [],
+    occasions: ['wedding', 'valentine', 'anniversary'],
+    dietTypes: [],
     metaTitle: 'Red Velvet Layer Cake | The Little Bake Store',
     metaDescription: 'Stunning red velvet cake with cream cheese frosting.',
   },
@@ -185,8 +185,8 @@ export const products: Product[] = [
     reviewCount: 42,
     inStock: true,
     flavor: 'vanilla',
-    occasion: ['birthday'],
-    dietType: [],
+    occasions: ['birthday'],
+    dietTypes: [],
     metaTitle: 'Vanilla Bean Cloud Cake | The Little Bake Store',
     metaDescription: 'Light and airy vanilla bean cake with whipped cream.',
   },
@@ -207,8 +207,8 @@ export const products: Product[] = [
     reviewCount: 64,
     inStock: true,
     flavor: 'vanilla',
-    occasion: ['birthday', 'baby-shower'],
-    dietType: [],
+    occasions: ['birthday', 'baby-shower'],
+    dietTypes: [],
     metaTitle: 'Strawberry & Cream Cupcakes | The Little Bake Store',
     metaDescription: 'Box of 12 fresh strawberry cupcakes.',
   },
@@ -230,8 +230,8 @@ export const products: Product[] = [
     reviewCount: 56,
     inStock: true,
     flavor: 'chocolate/caramel',
-    occasion: ['party', 'gift'],
-    dietType: [],
+    occasions: ['party', 'gift'],
+    dietTypes: [],
     metaTitle: 'Salted Caramel Cupcakes | The Little Bake Store',
     metaDescription: 'Delicious chocolate cupcakes with salted caramel.',
   },
@@ -252,8 +252,8 @@ export const products: Product[] = [
     reviewCount: 38,
     inStock: true,
     flavor: 'buttery',
-    occasion: ['breakfast', 'brunch'],
-    dietType: [],
+    occasions: ['breakfast', 'brunch'],
+    dietTypes: [],
     metaTitle: 'Artisan Croissants | The Little Bake Store',
     metaDescription: 'Handmade flaky French croissants.',
   },
@@ -275,8 +275,8 @@ export const products: Product[] = [
     reviewCount: 29,
     inStock: true,
     flavor: 'dark chocolate',
-    occasion: ['dessert', 'party'],
-    dietType: [],
+    occasions: ['dessert', 'party'],
+    dietTypes: [],
     metaTitle: 'Dark Chocolate Brownies | The Little Bake Store',
     metaDescription: 'Ultra fudgy Belgian chocolate brownies.',
   },
@@ -299,8 +299,8 @@ export const products: Product[] = [
     reviewCount: 112,
     inStock: true,
     flavor: 'assorted',
-    occasion: ['corporate-event', 'birthday'],
-    dietType: [],
+    occasions: ['corporate-event', 'birthday'],
+    dietTypes: [],
     metaTitle: 'Party Dessert Box | The Little Bake Store',
     metaDescription: 'Premium dessert box for parties and events.',
   }

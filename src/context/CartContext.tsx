@@ -24,20 +24,20 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const DELIVERY_FEE = 2000;
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-    const [items, setItems] = useState<CartItem[]>([]);
-    const [isOpen, setIsOpen] = useState(false);
-
-    // Load cart from localStorage
-    useEffect(() => {
-        const savedCart = localStorage.getItem('tlbs-cart');
-        if (savedCart) {
-            try {
-                setItems(JSON.parse(savedCart));
-            } catch {
-                localStorage.removeItem('tlbs-cart');
+    const [items, setItems] = useState<CartItem[]>(() => {
+        if (typeof window !== 'undefined') {
+            const savedCart = localStorage.getItem('tlbs-cart');
+            if (savedCart) {
+                try {
+                    return JSON.parse(savedCart);
+                } catch {
+                    localStorage.removeItem('tlbs-cart');
+                }
             }
         }
-    }, []);
+        return [];
+    });
+    const [isOpen, setIsOpen] = useState(false);
 
     // Save cart to localStorage
     useEffect(() => {

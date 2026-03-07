@@ -27,9 +27,15 @@ export default function ProductPage() {
                 // We'll search by slug. Our current [id] route actually handles ID, 
                 // so I'll create a dedicated slug route or filter on products.
                 const res = await fetch('/api/products');
+                if (!res.ok) throw new Error('Failed to fetch products');
+
                 const products = await res.json();
-                const found = products.find((p: any) => p.slug === slug);
-                setProduct(found);
+                if (Array.isArray(products)) {
+                    const found = products.find((p: any) => p.slug === slug);
+                    setProduct(found);
+                } else {
+                    console.error('API did not return an array:', products);
+                }
             } catch (error) {
                 console.error(error);
             } finally {
@@ -72,7 +78,9 @@ export default function ProductPage() {
                         {categoryData && (
                             <>
                                 <span className="breadcrumb-sep">/</span>
-                                <Link href={`/shop?category=${categoryData.slug}`}>{categoryData.name}</Link>
+                                <Link href={`/shop?category=${categoryData.slug || categoryData}`}>
+                                    {categoryData.name || categoryData}
+                                </Link>
                             </>
                         )}
                         <span className="breadcrumb-sep">/</span>
@@ -91,11 +99,11 @@ export default function ProductPage() {
                                 <Image src={product.image} alt={product.name} fill style={{ objectFit: 'cover' }} priority />
                             ) : (
                                 <div className="product-gallery-placeholder">
-                                    {product.category === 'cakes' && '🎂'}
-                                    {product.category === 'cupcakes' && '🧁'}
-                                    {product.category === 'desserts' && '🍮'}
-                                    {product.category === 'pastries' && '🥐'}
-                                    {product.category === 'event-packages' && '🎁'}
+                                    {(product.category?.slug === 'cakes' || product.category === 'cakes') && '🎂'}
+                                    {(product.category?.slug === 'cupcakes' || product.category === 'cupcakes') && '🧁'}
+                                    {(product.category?.slug === 'desserts' || product.category === 'desserts') && '🍮'}
+                                    {(product.category?.slug === 'pastries' || product.category === 'pastries') && '🥐'}
+                                    {(product.category?.slug === 'event-packages' || product.category === 'event-packages') && '🎁'}
                                 </div>
                             )}
                             {product.badge && (
